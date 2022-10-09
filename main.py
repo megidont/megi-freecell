@@ -413,7 +413,7 @@ def colorPrint(bs: str, b: dict[str,str], src: str="") -> str:
 			if b[src[0]] != "":
 				sel = newString.index(cardSymbol(ord(b[src[0]][-1])));
 				newString = newString[:sel] + esc("35;42") + newString[sel:sel + 2] + esc("30;42") + newString[sel + 2:];
-	newString = newString +	esc("37;40") + "1    2    3    4    5    6    7    8\n";
+	newString = esc("37;40") + "Q    W    E    R    S    H    C    D\n" + newString + esc("37;40") + "1    2    3    4    5    6    7    8\n";
 	print(newString);
 	return newString;
 
