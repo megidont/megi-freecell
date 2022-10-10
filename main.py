@@ -4,6 +4,7 @@ import random;
 from colorama import init;
 import re;
 import os;
+import sys;
 
 ##Borrowed functions
 
@@ -128,6 +129,8 @@ def cardName(card: int) -> str:
 def makeDeck(deckstring = "@ABCDEFGHIJKLPQRSTUVWXYZ[\`abcdefghijklpqrstuvwxyz{|") -> list[int]:
 	j = 0;
 	deck = [0]*52;
+	if deckstring is None:
+		deckstring = "@ABCDEFGHIJKLPQRSTUVWXYZ[\`abcdefghijklpqrstuvwxyz{|";
 	for letter in list(deckstring):
 		deck[j] = ord(letter);
 		j += 1;
@@ -441,8 +444,10 @@ def main(pm: int=1):
 	cont = 1;
 	solution = "";
 	moves = 0;
-	deck = makeDeck();
-	deck = riffleShuffle(deck, shufflecount);
+	argstring = sys.argv[1] if len(sys.argv) > 1 else None;
+	deck = makeDeck(argstring);
+	if(argstring is None):
+		deck = riffleShuffle(deck, shufflecount);
 	shuffle = deckString(deck);
 	board = dealBoard(deck);
 	try:
