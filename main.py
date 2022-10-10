@@ -5,6 +5,7 @@ from colorama import init;
 import re;
 import os;
 import sys;
+import math;
 
 ##Borrowed functions
 
@@ -128,9 +129,9 @@ def cardName(card: int) -> str:
 
 def makeDeck(deckstring = "@ABCDEFGHIJKLPQRSTUVWXYZ[\`abcdefghijklpqrstuvwxyz{|") -> list[int]:
 	j = 0;
-	deck = [0]*52;
 	if deckstring is None:
 		deckstring = "@ABCDEFGHIJKLPQRSTUVWXYZ[\`abcdefghijklpqrstuvwxyz{|";
+	deck = [0]*len(deckstring);
 	for letter in list(deckstring):
 		deck[j] = ord(letter);
 		j += 1;
@@ -198,15 +199,17 @@ def riffleShuffle(deck: list[int], iterations: int) -> list[int]:
 ##Game functions
 
 def dealBoard(deck: list[int]) -> dict:
+	pileheight = math.floor((len(deckString(deck)) + 1)/8);
+	heightoff = (len(deckString(deck)) + 1) % 8;
 	return {
-		"1" : deckString(drawCards(deck, 7)),
-		"2" : deckString(drawCards(deck, 7)),
-		"3" : deckString(drawCards(deck, 7)),
-		"4" : deckString(drawCards(deck, 7)),
-		"5" : deckString(drawCards(deck, 6)),
-		"6" : deckString(drawCards(deck, 6)),
-		"7" : deckString(drawCards(deck, 6)),
-		"8" : deckString(drawCards(deck, 6)),
+		"1" : deckString(drawCards(deck, pileheight + (1 if heightoff > 1 else 0))),
+		"2" : deckString(drawCards(deck, pileheight + (1 if heightoff > 2 else 0))),
+		"3" : deckString(drawCards(deck, pileheight + (1 if heightoff > 3 else 0))),
+		"4" : deckString(drawCards(deck, pileheight + (1 if heightoff > 4 else 0))),
+		"5" : deckString(drawCards(deck, pileheight + (1 if heightoff > 5 else 0))),
+		"6" : deckString(drawCards(deck, pileheight + (1 if heightoff > 6 else 0))),
+		"7" : deckString(drawCards(deck, pileheight + (1 if heightoff > 7 else 0))),
+		"8" : deckString(drawCards(deck, pileheight)),
 		"Q":"",
 		"W":"",
 		"E":"",
