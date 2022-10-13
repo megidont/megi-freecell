@@ -469,16 +469,34 @@ def main(pm: int=1):
 				print("Source: " + src);
 				dest = input("Destination: ");
 				if dest.upper() == "NO":
+					cont = 0;
+					clearScreen();
+					print("Quit.");
+					colorPrint(boardString(board), board);
+					print(esc("37;40") + "Shuffle: " + shuffle);
+					print(esc("37;40") + str(moves) + " moves:\t" + solution);
 					break;
 				if len(src) != 0 and len(dest) != 0:
 					move = src[0] + dest[0];
 				else:
 					move = "00";
 				if move.upper() == "NO":
+					cont = 0;
+					clearScreen();
+					print("Quit.");
+					colorPrint(boardString(board), board);
+					print(esc("37;40") + "Shuffle: " + shuffle);
+					print(esc("37;40") + str(moves) + " moves:\t" + solution);
 					break;
 			else:
 				move = input("Move: ");
 				if move.upper() == "NO":
+					cont = 0;
+					clearScreen();
+					print("Quit.");
+					colorPrint(boardString(board), board);
+					print(esc("37;40") + "Shuffle: " + shuffle);
+					print(esc("37;40") + str(moves) + " moves:\t" + solution);
 					break;
 				if len(move) < 2:
 					move = "00";
