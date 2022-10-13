@@ -495,9 +495,20 @@ def main(pm: int=1):
 
 	except KeyboardInterrupt:
 		cont = 0;
-		print("");
+		clearScreen();
+		print("Quit.");
+		colorPrint(boardString(board), board);
+		print(esc("37;40") + "Shuffle: " + shuffle);
+		print(esc("37;40") + str(moves) + " moves:\t" + solution);
 	if done:
 		print("Congration you done it!");
+		argstring = sys.argv[1] if len(sys.argv) > 1 else None;
+		deck = makeDeck(argstring);
+		if(argstring is None):
+			deck = riffleShuffle(deck, shufflecount);
+		shuffle = deckString(deck);
+		board = dealBoard(deck);
+		colorPrint(boardString(board), board);
 		print(esc("37;40") + "Shuffle: " + shuffle);
 		print(esc("37;40") + str(moves) + " moves:\t" + solution);
 
