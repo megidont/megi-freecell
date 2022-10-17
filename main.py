@@ -80,6 +80,10 @@ def cardSymbol(card: int) -> str:
 			resstring = "Q";
 		case 0x0C:
 			resstring = "K";
+		case 0x0D:
+			resstring = "L";
+		case 0x0E:
+			resstring = "M";
 		case default:
 			resstring = str(valu + 1);
 
@@ -280,7 +284,10 @@ def makeMove(move: str, b: dict[str, str]) -> int:
 			if move[0] in ("Q", "W", "E", "R"):
 				b[move[0]] = "";
 			elif move[0] in ("S", "H", "C", "D"):
-				b[move[0]] = chr(srcCard - 1);
+				if chr(srcCard) in ("@", "P", "`", "p"):
+					b[move[0]] = "";
+				else:
+					b[move[0]] = chr(srcCard - 1);
 			else:
 				b[move[0]] = b[move[0]][:-1];
 			returncode = 0;
@@ -293,7 +300,10 @@ def makeMove(move: str, b: dict[str, str]) -> int:
 			if move[0] in ("Q", "W", "E", "R"):
 				b[move[0]] = "";
 			elif move[0] in ("S", "H", "C", "D"):
-				b[move[0]] = chr(srcCard - 1);
+				if chr(srcCard) in ("@", "P", "`", "p"):
+					b[move[0]] = "";
+				else:
+					b[move[0]] = chr(srcCard - 1);
 			else:
 				b[move[0]] = b[move[0]][:-1];
 			returncode = 0;
@@ -302,7 +312,10 @@ def makeMove(move: str, b: dict[str, str]) -> int:
 		if move[0] in ("Q", "W", "E", "R"):
 			b[move[0]] = "";
 		elif move[0] in ("S", "H", "C", "D"):
-			b[move[0]] = chr(srcCard - 1);
+			if chr(srcCard) in ("@", "P", "`", "p"):
+				b[move[0]] = "";
+			else:
+				b[move[0]] = chr(srcCard - 1);
 		else:
 			b[move[0]] = b[move[0]][:-1];
 		returncode = 0;
@@ -316,7 +329,10 @@ def makeMove(move: str, b: dict[str, str]) -> int:
 		if move[0] in ("Q", "W", "E", "R"):
 			b[move[0]] = "";
 		elif move[0] in ("S", "H", "C", "D"):
-			b[move[0]] = chr(srcCard - 1);
+			if chr(srcCard) in ("@", "P", "`", "p"):
+				b[move[0]] = "";
+			else:
+				b[move[0]] = chr(srcCard - 1);
 		else:
 			b[move[0]] = b[move[0]][:-1];
 		returncode = 0;
@@ -331,11 +347,19 @@ def makeMove(move: str, b: dict[str, str]) -> int:
 		returncode = 5;
 		return returncode;
 
+	if move[1] in ("Q", "W", "E", "R"):
+		if destCard != 0:
+			returncode = 7;
+			return returncode;
+
 	b[move[1]] = b[move[1]] + chr(srcCard);
 	if move[0] in ("Q", "W", "E", "R"):
 		b[move[0]] = "";
 	elif move[0] in ("S", "H", "C", "D"):
-		b[move[0]] = chr(srcCard - 1);
+		if chr(srcCard) in ("@", "P", "`", "p"):
+			b[move[0]] = "";
+		else:
+			b[move[0]] = chr(srcCard - 1);
 	else:
 		b[move[0]] = b[move[0]][:-1];
 	returncode = 0;
