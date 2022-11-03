@@ -486,11 +486,11 @@ def main(pm: int=1):
 		shuffleid = shuffleid + hex(i)[2:];
 	logpath = "./games/" + str(shuffleid) + ".log";
 	os.makedirs(os.path.dirname(logpath), exist_ok=True)
-	masterlog = open("./games.log", "a");
+	masterlog = open("./games.log", "a", encoding='utf-8');
 	try:
-		logfile = open(logpath, "x");
+		logfile = open(logpath, "x", encoding='utf-8');
 	except:
-		logfile = open(logpath, "a");
+		logfile = open(logpath, "a", encoding='utf-8');
 		logfile.write("\n====================================================\n\n");
 	starttime = datetime.datetime.now().replace(microsecond=0);
 	shuffle = deckString(deck);
