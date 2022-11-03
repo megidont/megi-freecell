@@ -40,6 +40,8 @@ DIAMONDSCOMPLETE	= "|";
 shufflecount = 7;
 playmode = 1;
 
+dateformat = "%Y%m%d%H%M%S";
+
 cellColours = {
 	"1" : esc("30;42"),
 	"2" : esc("30;42"),
@@ -463,13 +465,28 @@ def clearScreen():
 	else:
 		os.system("clear");
 
+def printEnd(board, starttime, shuffle, moves, solution, ncsolution, logpath, logfile, masterlog, endmessage, logmessage):
+	clearScreen();
+	endtime = datetime.datetime.now().replace(microsecond=0);
+	print(endmessage);
+	colorPrint(boardString(board), board);
+	print(esc("37;40") + "Time: " + str(endtime - starttime));
+	print(esc("37;40") + "Shuffle: " + shuffle);
+	print(esc("37;40") + str(moves) + " moves:\t" + solution);
+	logfile.write(starttime.strftime(dateformat) + " - " + logmessage + "\n\n");
+	logfile.write(boardString(board) + "\n");
+	logfile.write("Time: " + str(endtime - starttime) + "\n");
+	logfile.write("Shuffle: " + shuffle + "\n");
+	logfile.write(str(moves) + " moves:\t" + ncsolution + "\n");
+	logfile.close();
+	masterlog.write(starttime.strftime(dateformat) + " - " + shuffle + " - Quit (declined) after " + str(endtime - starttime) + " -> " + logpath + "\n");
+	masterlog.close();
+
 ##Base Game Loop
 def main(pm: int=1):
 	init();
 
 	clearScreen();
-
-	dateformat = "%Y%m%d%H%M%S";
 
 	done = 0;
 	cont = 1;
@@ -512,20 +529,7 @@ def main(pm: int=1):
 				dest = input("Destination: ");
 				if dest.upper() == "NO":
 					cont = 0;
-					clearScreen();
-					endtime = datetime.datetime.now().replace(microsecond=0);
-					print("Quit.");
-					colorPrint(boardString(board), board);
-					print(esc("37;40") + "Time: " + str(endtime - starttime));
-					print(esc("37;40") + "Shuffle: " + shuffle);
-					print(esc("37;40") + str(moves) + " moves:\t" + solution);
-					logfile.write(starttime.strftime(dateformat) + " - Quit. (Declined)\n\n");
-					logfile.write(boardString(board) + "\n");
-					logfile.write("Time: " + str(endtime - starttime) + "\n");
-					logfile.write("Shuffle: " + shuffle + "\n");
-					logfile.write(str(moves) + " moves:\t" + ncsolution + "\n");
-					logfile.close();
-					masterlog.write(starttime.strftime(dateformat) + " - " + shuffle + " - Quit (declined) after " + str(endtime - starttime) + " -> " + logpath + "\n");
+					printEnd(board, starttime, shuffle, moves, solution, ncsolution, logpath, logfile, masterlog, "Quit.", "Quit. (Declined.)")
 					masterlog.close();
 					break;
 				if len(src) != 0 and len(dest) != 0:
@@ -534,41 +538,14 @@ def main(pm: int=1):
 					move = "00";
 				if move.upper() == "NO":
 					cont = 0;
-					clearScreen();
-					endtime = datetime.datetime.now().replace(microsecond=0);
-					print("Quit.");
-					colorPrint(boardString(board), board);
-					print(esc("37;40") + "Time: " + str(endtime - starttime));
-					print(esc("37;40") + "Shuffle: " + shuffle);
-					print(esc("37;40") + str(moves) + " moves:\t" + solution);
-					logfile.write(starttime.strftime(dateformat) + " - Quit. (Declined)\n\n");
-					logfile.write(boardString(board) + "\n");
-					logfile.write("Time: " + str(endtime - starttime) + "\n");
-					logfile.write("Shuffle: " + shuffle + "\n");
-					logfile.write(str(moves) + " moves:\t" + ncsolution + "\n");
-					logfile.close();
-					masterlog.write(starttime.strftime(dateformat) + " - " + shuffle + " - Quit (declined) after " + str(endtime - starttime) + " -> " + logpath + "\n");
-					masterlog.close();
+					printEnd(board, starttime, shuffle, moves, solution, ncsolution, logpath, logfile, masterlog, "Quit.", "Quit. (Declined.)")
 					break;
 			else:
 				move = input("Move: ");
 				if move.upper() == "NO":
 					cont = 0;
 					clearScreen();
-					endtime = datetime.datetime.now().replace(microsecond=0);
-					print("Quit.");
-					colorPrint(boardString(board), board);
-					print(esc("37;40") + "Time: " + str(endtime - starttime));
-					print(esc("37;40") + "Shuffle: " + shuffle);
-					print(esc("37;40") + str(moves) + " moves:\t" + solution);
-					logfile.write(starttime.strftime(dateformat) + " - Quit. (Declined)\n\n");
-					logfile.write(boardString(board) + "\n");
-					logfile.write("Time: " + str(endtime - starttime) + "\n");
-					logfile.write("Shuffle: " + shuffle + "\n");
-					logfile.write(str(moves) + " moves:\t" + ncsolution + "\n");
-					logfile.close();
-					masterlog.write(starttime.strftime(dateformat) + " - " + shuffle + " - Quit (declined) after " + str(endtime - starttime) + " -> " + logpath + "\n");
-					masterlog.close();
+					printEnd(board, starttime, shuffle, moves, solution, ncsolution, logpath, logfile, masterlog, "Quit.", "Quit. (Declined.)")
 					break;
 				if len(move) < 2:
 					move = "00";
@@ -586,39 +563,12 @@ def main(pm: int=1):
 
 	except KeyboardInterrupt:
 		cont = 0;
-		clearScreen();
-		endtime = datetime.datetime.now().replace(microsecond=0);
-		print("Quit.");
-		colorPrint(boardString(board), board);
-		print(esc("37;40") + "Time: " + str(endtime - starttime));
-		print(esc("37;40") + "Shuffle: " + shuffle);
-		print(esc("37;40") + str(moves) + " moves:\t" + solution);
-		logfile.write(starttime.strftime(dateformat) + " - Quit. (Interrupted.)\n\n");
-		logfile.write(boardString(board) + "\n");
-		logfile.write("Time: " + str(endtime - starttime) + "\n");
-		logfile.write("Shuffle: " + shuffle + "\n");
-		logfile.write(str(moves) + " moves:\t" + ncsolution + "\n");
-		logfile.close();
-		masterlog.write(starttime.strftime(dateformat) + " - " + shuffle + " - Quit (interrupted) after " + str(endtime - starttime) + " -> " + logpath + "\n");
-		masterlog.close();
+		printEnd(board, starttime, shuffle, moves, solution, ncsolution, logpath, logfile, masterlog, "Quit.", "Quit. (Interrupted.)")
 	if done:
-		endtime = datetime.datetime.now().replace(microsecond=0);
-		print("Congration you done it!");
 		deck = deckno;
 		shuffle = deckString(deck);
 		board = dealBoard(deck);
-		colorPrint(boardString(board), board);
-		print(esc("37;40") + "Time: " + str(endtime - starttime));
-		print(esc("37;40") + "Shuffle: " + shuffle);
-		print(esc("37;40") + str(moves) + " moves:\t" + solution);
-		logfile.write(starttime.strftime(dateformat) + " - Succeeded!\n\n");
-		logfile.write(boardString(board) + "\n");
-		logfile.write("Time: " + str(endtime - starttime) + "\n");
-		logfile.write("Shuffle: " + shuffle + "\n");
-		logfile.write(str(moves) + " moves:\t" + ncsolution + "\n");
-		logfile.close();
-		masterlog.write(starttime.strftime(dateformat) + " - " + shuffle + " - Succeeded after " + str(endtime - starttime) + " -> " + logpath + "\n");
-		masterlog.close();
+		printEnd(board, starttime, shuffle, moves, solution, ncsolution, logpath, logfile, masterlog, "Congration you done it!", "Succeeded!")
 
 if __name__ == "__main__":
 	main(2);
