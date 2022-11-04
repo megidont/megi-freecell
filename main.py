@@ -2,12 +2,14 @@
 ##imports
 
 import random;
-from colorama import init;
 import re;
 import os;
 import sys;
 import math;
 import datetime;
+
+if os.name == 'nt':
+	from colorama import init;
 
 ##Borrowed functions
 
@@ -501,7 +503,8 @@ def printEnd(board, starttime, shuffle, moves, solution, ncsolution, logpath, lo
 
 ##Base Game Loop
 def main(pm: int=1):
-	init();
+	if os.name == 'nt':
+		init();
 
 	clearScreen();
 
