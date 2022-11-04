@@ -42,23 +42,41 @@ playmode = 1;
 
 dateformat = "%Y%m%d%H%M%S";
 
+whitefg = "37";
+blackfg = "30";
+redfg = "31";
+
+cuefg = "31";
+dubfg = "32";
+eefg = "33";
+arrfg = "34";
+
+selectedfg = "35";
+
+whitebg = "47";
+blackbg = "40";
+redbg = "41";
+
+tablebg = "42";
+borderbg = "43";
+
 cellColours = {
-	"1" : esc("30;42"),
-	"2" : esc("30;42"),
-	"3" : esc("30;42"),
-	"4" : esc("30;42"),
-	"5" : esc("30;42"),
-	"6" : esc("30;42"),
-	"7" : esc("30;42"),
-	"8" : esc("30;42"),
-	"Q" : esc("31;40"),
-	"W" : esc("32;40"),
-	"E" : esc("34;40"),
-	"R" : esc("33;40"),
-	"S" : esc("30;47"),
-	"H" : esc("31;47"),
-	"C" : esc("30;47"),
-	"D" : esc("31;47")
+	"1" : esc(blackfg + ";" + tablebg),
+	"2" : esc(blackfg + ";" + tablebg),
+	"3" : esc(blackfg + ";" + tablebg),
+	"4" : esc(blackfg + ";" + tablebg),
+	"5" : esc(blackfg + ";" + tablebg),
+	"6" : esc(blackfg + ";" + tablebg),
+	"7" : esc(blackfg + ";" + tablebg),
+	"8" : esc(blackfg + ";" + tablebg),
+	"Q" : esc(cuefg + ";" + blackbg),
+	"W" : esc(dubfg + ";" + blackbg),
+	"E" : esc(eefg + ";" + blackbg),
+	"R" : esc(arrfg + ";" + blackbg),
+	"S" : esc(blackfg + ";" + whitebg),
+	"H" : esc(redfg + ";" + whitebg),
+	"C" : esc(blackfg + ";" + whitebg),
+	"D" : esc(redfg + ";" + whitebg)
 }
 
 ##Card Functions
@@ -421,17 +439,16 @@ def checkLoss(b: dict[str, str]) -> int:
 
 def colorPrint(bs: str, b: dict[str,str], src: str="") -> str:
 	validList = ["Q", "W", "E", "R", "S", "H", "C", "D", "1", "2", "3", "4", "5", "6", "7", "8"];
-	newString = bs;
+	newString = esc(blackfg + ";" + tablebg) + bs;
 	redRegex = re.compile(r".(♥|♦)");
 	goldRegex = re.compile(r"(\||\-|¦)");
 	locList = [];
-	newString = esc("30;42") + bs;
 	for match in re.finditer(redRegex, newString):
 		locList.append(match.span()[0]);
 	i = 0;
 	while i < len(locList):
 		cursor = locList[i] + 16*i;
-		newString = newString[:cursor] + esc("31;42") + newString[cursor:cursor + 2] + esc("30;42") + newString[cursor + 2:];
+		newString = newString[:cursor] + esc(redfg + ";" + tablebg) + newString[cursor:cursor + 2] + esc(blackfg + ";" + tablebg) + newString[cursor + 2:];
 		i += 1;
 
 	locList = [];
@@ -440,23 +457,23 @@ def colorPrint(bs: str, b: dict[str,str], src: str="") -> str:
 	i = 0;
 	while i < len(locList):
 		cursor = locList[i] + 16*i;
-		newString = newString[:cursor] + esc("37;43") + newString[cursor:cursor + 1] + esc("30;42") + newString[cursor + 1:];
+		newString = newString[:cursor] + esc(whitefg + ";" + borderbg) + newString[cursor:cursor + 1] + esc(blackfg + ";" + tablebg) + newString[cursor + 1:];
 		i += 1;
 	if src != "" and src[0] in validList:
 		if b != {}:
 			if b[src[0]] != "":
 				sel = newString.index(cardSymbol(ord(b[src[0]][-1])));
-				newString = newString[:sel] + esc("35;42") + newString[sel:sel + 2] + esc("30;42") + newString[sel + 2:];
-	newString = esc("37;40") + "Q    W    E    R    S    H    C    D\n" + newString + esc("37;40") + "1    2    3    4    5    6    7    8\n";
+				newString = newString[:sel] + esc(selectedfg + ";" + tablebg) + newString[sel:sel + 2] + esc(blackfg + ";" + tablebg) + newString[sel + 2:];
+	newString = esc(whitefg + ";" + blackbg) + "Q    W    E    R    S    H    C    D\n" + newString + esc(whitefg + ";" + blackbg) + "1    2    3    4    5    6    7    8\n";
 	print(newString);
 	return newString;
 
 def colorSolution(move: str) -> str:
 
 	if move.isdigit():
-		cm = esc("30;42") + move[0] + esc("30;43") + move[1] + esc("37;40") + " ";
+		cm = esc(blackfg + ";" + tablebg) + move[0] + esc(blackfg + ";" + borderbg) + move[1] + esc(whitefg + ";" + blackbg) + " ";
 	else:
-		cm = cellColours[move[0].upper()] + move[0] + cellColours[move[1].upper()] + move[1] + esc("37;40") + " ";
+		cm = cellColours[move[0].upper()] + move[0] + cellColours[move[1].upper()] + move[1] + esc(whitefg + ";" + blackbg) + " ";
 	return cm;
 
 def clearScreen():
@@ -470,9 +487,9 @@ def printEnd(board, starttime, shuffle, moves, solution, ncsolution, logpath, lo
 	endtime = datetime.datetime.now().replace(microsecond=0);
 	print(endmessage);
 	colorPrint(boardString(board), board);
-	print(esc("37;40") + "Time: " + str(endtime - starttime));
-	print(esc("37;40") + "Shuffle: " + shuffle);
-	print(esc("37;40") + str(moves) + " moves:\t" + solution);
+	print(esc(whitefg + ";" + blackbg) + "Time: " + str(endtime - starttime));
+	print(esc(whitefg + ";" + blackbg) + "Shuffle: " + shuffle);
+	print(esc(whitefg + ";" + blackbg) + str(moves) + " moves:\t" + solution);
 	logfile.write(starttime.strftime(dateformat) + " - " + logmessage + "\n\n");
 	logfile.write(boardString(board) + "\n");
 	logfile.write("Time: " + str(endtime - starttime) + "\n");
@@ -515,16 +532,16 @@ def main(pm: int=1):
 	try:
 		while cont:
 			colorPrint(boardString(board), board);
-			print(esc("37;40") + "Shuffle: " + shuffle);
-			print(esc("37;40") + str(moves) + " moves:\t" + solution);
+			print(esc(whitefg + ";" + blackbg) + "Shuffle: " + shuffle);
+			print(esc(whitefg + ";" + blackbg) + str(moves) + " moves:\t" + solution);
 			if pm == 1:
 				src = input("Source: ");
 				if src.upper() == "NO":
 					break;
 				clearScreen();
 				colorPrint(boardString(board), board, src);
-				print(esc("37;40") + "Shuffle: " + shuffle);
-				print(esc("37;40") + str(moves) + " moves:\t" + solution);
+				print(esc(whitefg + ";" + blackbg) + "Shuffle: " + shuffle);
+				print(esc(whitefg + ";" + blackbg) + str(moves) + " moves:\t" + solution);
 				print("Source: " + src);
 				dest = input("Destination: ");
 				if dest.upper() == "NO":
