@@ -497,9 +497,7 @@ def printEnd(board, starttime, shuffle, moves, solution, ncsolution, logpath, lo
 	logfile.write("Time: " + str(endtime - starttime) + "\n");
 	logfile.write("Shuffle: " + shuffle + "\n");
 	logfile.write(str(moves) + " moves:\t" + ncsolution + "\n");
-	logfile.close();
 	masterlog.write(starttime.strftime(dateformat) + " - " + shuffle + " - Quit (declined) after " + str(endtime - starttime) + " -> " + logpath + "\n");
-	masterlog.close();
 
 ##Base Game Loop
 def main(pm: int=1):
@@ -540,7 +538,13 @@ def main(pm: int=1):
 			if pm == 1:
 				src = input("Source: ");
 				if src.upper() == "NO":
+					cont = 0;
+					printEnd(board, starttime, shuffle, moves, solution, ncsolution, logpath, logfile, masterlog, "Quit.", "Quit. (Declined.)")
+					logfile.close();
+					masterlog.close();
 					break;
+				elif dest.upper() == "UM":
+					printEnd(board, starttime, shuffle, moves, solution, ncsolution, logpath, logfile, masterlog, " ", "Saved.");
 				clearScreen();
 				colorPrint(boardString(board), board, src);
 				print(esc(whitefg + ";" + blackbg) + "Shuffle: " + shuffle);
@@ -550,8 +554,12 @@ def main(pm: int=1):
 				if dest.upper() == "NO":
 					cont = 0;
 					printEnd(board, starttime, shuffle, moves, solution, ncsolution, logpath, logfile, masterlog, "Quit.", "Quit. (Declined.)")
+					logfile.close();
 					masterlog.close();
 					break;
+				elif dest.upper() == "UM":
+					printEnd(board, starttime, shuffle, moves, solution, ncsolution, logpath, logfile, masterlog, " ", "Saved.");
+					clearScreen();
 				if len(src) != 0 and len(dest) != 0:
 					move = src[0] + dest[0];
 				else:
@@ -559,20 +567,33 @@ def main(pm: int=1):
 				if move.upper() == "NO":
 					cont = 0;
 					printEnd(board, starttime, shuffle, moves, solution, ncsolution, logpath, logfile, masterlog, "Quit.", "Quit. (Declined.)")
+					logfile.close();
+					masterlog.close();
 					break;
+				elif move.upper() == "UM":
+					printEnd(board, starttime, shuffle, moves, solution, ncsolution, logpath, logfile, masterlog, " ", "Saved.");
+					clearScreen();
 			else:
 				move = input("Move: ");
 				if move.upper() == "NO":
 					cont = 0;
 					clearScreen();
 					printEnd(board, starttime, shuffle, moves, solution, ncsolution, logpath, logfile, masterlog, "Quit.", "Quit. (Declined.)")
+					logfile.close();
+					masterlog.close();
 					break;
+				elif move.upper() == "UM":
+					printEnd(board, starttime, shuffle, moves, solution, ncsolution, logpath, logfile, masterlog, " ", "Saved.");
+					clearScreen();
 				if len(move) < 2:
 					move = "00";
 			clearScreen();
 			invalid = makeMove(move, board);
 			if invalid:
-				print("Invalid move. Please try again. (" + str(invalid) + ")");
+				if move.upper() != "UM":
+					print("Invalid move. Please try again. (" + str(invalid) + ")");
+				else:
+					print("Saved to " + logpath + ".");
 			else:
 				solution = solution + colorSolution(move);
 				ncsolution = ncsolution + move + " ";
@@ -584,11 +605,15 @@ def main(pm: int=1):
 	except KeyboardInterrupt:
 		cont = 0;
 		printEnd(board, starttime, shuffle, moves, solution, ncsolution, logpath, logfile, masterlog, "Quit.", "Quit. (Interrupted.)")
+		logfile.close();
+		masterlog.close();
 	if done:
 		deck = deckno;
 		shuffle = deckString(deck);
 		board = dealBoard(deck);
 		printEnd(board, starttime, shuffle, moves, solution, ncsolution, logpath, logfile, masterlog, "Congration you done it!", "Succeeded!")
+		logfile.close();
+		masterlog.close();
 
 if __name__ == "__main__":
 	main(2);
